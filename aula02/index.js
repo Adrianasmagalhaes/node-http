@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
-const hostname = "192.168.3.85";
+const hostname = "localhost";
 const port = 5000;
 
 const books = [
@@ -19,7 +19,9 @@ const books = [
     autor: "Jostein Gaarden",
     favorito: true,
   },
-  { _id: 3, title: "A casa", autor: "Raquel de Queiroz", favorito: true },
+  { _id: 3, title: "A casa",
+   autor: "Raquel de Queiroz",
+    favorito: true },
 ];
 
 app.use(
@@ -46,7 +48,7 @@ app.get("/books", (req, res) => {
 app.post("/books", (req, res) => {
   //o body contém a lista que é enviada
   const body= req.body
-    console.log('body'.body);
+    console.log('body',req.body);
     //percorre a 'sacola'
     body.map(obj =>books.push(obj) )
   
@@ -61,11 +63,28 @@ app.get("/books/:id", (req, res) => {
 });
 
 app.delete("/books/:id", (req, res) =>{
-  let id = req.params.id
+  let id = parseInt(req.params.id)
   let index = books.findIndex(obj=> obj._id === id)
+  console.log('index',index);
 
   books.splice(index, 1)
   res.send(books)
+})
+//patch
+//Localizar o item a ser atualizado
+//Pegar as informações nova (body) 
+app.patch('/books/:id',(req,res)=>{
+  let id = parseInt(req.params.id)
+
+  let book = books.find(obj=> obj._id === id)
+console.log('book',book);
+
+let body= req.body
+console.log('body', body);
+
+book.title = body.title
+book.autor = body.autor
+res.send(books)
 })
 
 app.listen(port, hostname, () => console.log(`http://${hostname}:${port}`));
