@@ -1,6 +1,13 @@
 const express = require("express");
-
+const cors = require('cors')
 const app = express();
+const db = require('../db/dbConfig')
+
+db.once('open',()=>{
+  console.log('conexão realizada com sucesso!')
+})
+
+
 const bodyParser = require("body-parser");
 
 const hostname = "localhost";
@@ -23,6 +30,7 @@ const books = [
    autor: "Raquel de Queiroz",
     favorito: true },
 ];
+app.use(cors())
 
 app.use(
   express.urlencoded({
